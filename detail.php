@@ -1382,6 +1382,38 @@
 								$shortTermTtl = 0;
 								$veryShortTermTtl = 0;
 								$bondTtl = 0;
+								$total2010 = [0,0,0,0];
+								$total2011 = [0,0,0,0];
+								$total2012 = [0,0,0,0];
+								$total2013 = [0,0,0,0];
+								$total2014 = [0,0,0,0];
+								$total2015 = [0,0,0,0];
+								$total2016 = [0,0,0,0];
+								$total2017 = [0,0,0,0];
+								$total2010cnt = [0,0,0,0];
+								$total2011cnt = [0,0,0,0];
+								$total2012cnt = [0,0,0,0];
+								$total2013cnt = [0,0,0,0];
+								$total2014cnt = [0,0,0,0];
+								$total2015cnt = [0,0,0,0];
+								$total2016cnt = [0,0,0,0];
+								$total2017cnt = [0,0,0,0];
+								$interRate2010 = [0,0,0,0];
+								$interRate2011 = [0,0,0,0];
+								$interRate2012 = [0,0,0,0];
+								$interRate2013 = [0,0,0,0];
+								$interRate2014 = [0,0,0,0];
+								$interRate2015 = [0,0,0,0];
+								$interRate2016 = [0,0,0,0];
+								$interRate2017 = [0,0,0,0];
+								$interRate2010cnt = [0,0,0,0];
+								$interRate2011cnt = [0,0,0,0];
+								$interRate2012cnt = [0,0,0,0];
+								$interRate2013cnt = [0,0,0,0];
+								$interRate2014cnt = [0,0,0,0];
+								$interRate2015cnt = [0,0,0,0];
+								$interRate2016cnt = [0,0,0,0];
+								$interRate2017cnt = [0,0,0,0];
             					for ($i = 0; $i < count($financingGroupInfo_data["bond_detail"]); $i++) {
             					    $debtSubject = $financingGroupInfo_data["bond_detail"][$i]["debt_subject"];
 									$date = $financingGroupInfo_data["bond_detail"][$i]["list_date"];
@@ -1390,10 +1422,64 @@
 									$leadUnderwriter = $financingGroupInfo_data["bond_detail"][$i]["lead_underwriter"];
 									$classify = $financingGroupInfo_data["bond_detail"][$i]["classify"];
 									$rest = $financingGroupInfo_data["bond_detail"][$i]["rest"];
+									$interRate = $financingGroupInfo_data["bond_detail"][$i]["inter_rate"];
 									if($classify == "一般中期票据") $midTermTtl++;
 									if($classify == "一般短期融资券") $shortTermTtl++;
 									if($classify == "一般超短期融资券") $veryShortTermTtl++;
 									if($classify == "一般公司债") $bondTtl++;
+									$totalnum = floatval($total);
+									$interRateNum = floatval($interRate);
+									$deadlineNum = intval($deadline);
+									switch(intval(explode("-", $date)[0])){
+										case 2010:
+											if($deadlineNum>0 && $deadlineNum<=1){$total2010[0] += $totalnum; $total2010cnt[0]++;$interRate2010[0] += $interRateNum; $interRate2010cnt[0]++;}
+											else if($deadlineNum>1 && $deadlineNum<=3){$total2010[1] += $totalnum; $total2010cnt[1]++;$interRate2010[1] += $interRateNum; $interRate2010cnt[1]++;}
+											else if($deadlineNum>3 && $deadlineNum<=5){$total2010[2] += $totalnum; $total2010cnt[2]++;$interRate2010[2] += $interRateNum; $interRate2010cnt[2]++;}
+											else if($deadlineNum>5){$total2010[3] += $totalnum; $total2010cnt[3]++;$interRate2010[3] += $interRateNum; $interRate2010cnt[3]++;}
+											break;
+										case 2011:
+											if($deadlineNum>0 && $deadlineNum<=1){$total2011[0] += $totalnum; $total2011cnt[0]++;$interRate2011[0] += $interRateNum; $interRate2011cnt[0]++;}
+											else if($deadlineNum>1 && $deadlineNum<=3){$total2011[1] += $totalnum; $total2011cnt[1]++;$interRate2011[1] += $interRateNum; $interRate2011cnt[1]++;}
+											else if($deadlineNum>3 && $deadlineNum<=5){$total2011[2] += $totalnum; $total2011cnt[2]++;$interRate2011[2] += $interRateNum; $interRate2011cnt[2]++;}
+											else if($deadlineNum>5){$total2011[3] += $totalnum; $total2011cnt[3]++;$interRate2011[3] += $interRateNum; $interRate2011cnt[3]++;}
+											break;
+										case 2012:
+											if($deadlineNum>0 && $deadlineNum<=1){$total2012[0] += $totalnum; $total2012cnt[0]++;$interRate2012[0] += $interRateNum; $interRate2012cnt[0]++;}
+											else if($deadlineNum>1 && $deadlineNum<=3){$total2012[1] += $totalnum; $total2012cnt[1]++;$interRate2012[1] += $interRateNum; $interRate2012cnt[1]++;}
+											else if($deadlineNum>3 && $deadlineNum<=5){$total2012[2] += $totalnum; $total2012cnt[2]++;$interRate2012[2] += $interRateNum; $interRate2012cnt[2]++;}
+											else if($deadlineNum>5){$total2012[3] += $totalnum; $total2012cnt[3]++;$interRate2012[3] += $interRateNum; $interRate2012cnt[3]++;}
+											break;
+										case 2013:
+											if($deadlineNum>0 && $deadlineNum<=1){$total2013[0] += $totalnum; $total2013cnt[0]++;$interRate2013[0] += $interRateNum; $interRate2013cnt[0]++;}
+											else if($deadlineNum>1 && $deadlineNum<=3){$total2013[1] += $totalnum; $total2013cnt[1]++;$interRate2013[1] += $interRateNum; $interRate2013cnt[1]++;}
+											else if($deadlineNum>3 && $deadlineNum<=5){$total2013[2] += $totalnum; $total2013cnt[2]++;$interRate2013[2] += $interRateNum; $interRate2013cnt[2]++;}
+											else if($deadlineNum>5){$total2013[3] += $totalnum; $total2013cnt[3]++;$interRate2013[3] += $interRateNum; $interRate2013cnt[3]++;}
+											break;
+										case 2014:
+											if($deadlineNum>0 && $deadlineNum<=1){$total2014[0] += $totalnum; $total2014cnt[0]++;$interRate2014[0] += $interRateNum; $interRate2014cnt[0]++;}
+											else if($deadlineNum>1 && $deadlineNum<=3){$total2014[1] += $totalnum; $total2014cnt[1]++;$interRate2014[1] += $interRateNum; $interRate2014cnt[1]++;}
+											else if($deadlineNum>3 && $deadlineNum<=5){$total2014[2] += $totalnum; $total2014cnt[2]++;$interRate2014[2] += $interRateNum; $interRate2014cnt[2]++;}
+											else if($deadlineNum>5){$total2014[3] += $totalnum; $total2014cnt[3]++;$interRate2014[3] += $interRateNum; $interRate2014cnt[3]++;}
+											break;
+										case 2015:
+											if($deadlineNum>0 && $deadlineNum<=1){$total2015[0] += $totalnum; $total2015cnt[0]++;$interRate2015[0] += $interRateNum; $interRate2015cnt[0]++;}
+											else if($deadlineNum>1 && $deadlineNum<=3){$total2015[1] += $totalnum; $total2015cnt[1]++;$interRate2015[1] += $interRateNum; $interRate2015cnt[1]++;}
+											else if($deadlineNum>3 && $deadlineNum<=5){$total2015[2] += $totalnum; $total2015cnt[2]++;$interRate2015[2] += $interRateNum; $interRate2015cnt[2]++;}
+											else if($deadlineNum>5){$total2015[3] += $totalnum; $total2015cnt[3]++;$interRate2015[3] += $interRateNum; $interRate2015cnt[3]++;}
+											break;
+										case 2016:
+											if($deadlineNum>0 && $deadlineNum<=1){$total2016[0] += $totalnum; $total2016cnt[0]++;$interRate2016[0] += $interRateNum; $interRate2016cnt[0]++;}
+											else if($deadlineNum>1 && $deadlineNum<=3){$total2016[1] += $totalnum; $total2016cnt[1]++;$interRate2016[1] += $interRateNum; $interRate2016cnt[1]++;}
+											else if($deadlineNum>3 && $deadlineNum<=5){$total2016[2] += $totalnum; $total2016cnt[2]++;$interRate2016[2] += $interRateNum; $interRate2016cnt[2]++;}
+											else if($deadlineNum>5){$total2016[3] += $totalnum; $total2016cnt[3]++;$interRate2016[3] += $interRateNum; $interRate2016cnt[3]++;}
+											break;
+										case 2017:
+											if($deadlineNum>0 && $deadlineNum<=1){$total2017[0] += $totalnum; $total2017cnt[0]++;$interRate2017[0] += $interRateNum; $interRate2017cnt[0]++;}
+											else if($deadlineNum>1 && $deadlineNum<=3){$total2017[1] += $totalnum; $total2017cnt[1]++;$interRate2017[1] += $interRateNum; $interRate2017cnt[1]++;}
+											else if($deadlineNum>3 && $deadlineNum<=5){$total2017[2] += $totalnum; $total2017cnt[2]++;$interRate2017[2] += $interRateNum; $interRate2017cnt[2]++;}
+											else if($deadlineNum>5){$total2017[3] += $totalnum; $total2017cnt[3]++;$interRate2017[3] += $interRateNum; $interRate2017cnt[3]++;}
+											break;
+									}
             					?>
             					
             					<tr>
@@ -1415,6 +1501,172 @@
 						echo "中期票据", $midTermTtl, "只，短期融资券", $shortTermTtl, "只，超短期融资券", $veryShortTermTtl, "只，公司债券", $bondTtl, "只。";
 						?>
 
+						<?PHP
+							for($i=0;$i<4;$i++){
+								if($total2010cnt[$i]!=0)$total2010[$i] = $total2010[$i] / $total2010cnt[$i];
+								if($total2011cnt[$i]!=0)$total2011[$i] = $total2011[$i] / $total2011cnt[$i];
+								if($total2012cnt[$i]!=0)$total2012[$i] = $total2012[$i] / $total2012cnt[$i];
+								if($total2013cnt[$i]!=0)$total2013[$i] = $total2013[$i] / $total2013cnt[$i];
+								if($total2014cnt[$i]!=0)$total2014[$i] = $total2014[$i] / $total2014cnt[$i];
+								if($total2015cnt[$i]!=0)$total2015[$i] = $total2015[$i] / $total2015cnt[$i];
+								if($total2016cnt[$i]!=0)$total2016[$i] = $total2016[$i] / $total2016cnt[$i];
+								if($total2017cnt[$i]!=0)$total2017[$i] = $total2017[$i] / $total2017cnt[$i];
+								if($interRate2010cnt[$i]!=0)$interRate2010[$i] = $interRate2010[$i] / $interRate2010cnt[$i];
+								if($interRate2011cnt[$i]!=0)$interRate2011[$i] = $interRate2011[$i] / $interRate2011cnt[$i];
+								if($interRate2012cnt[$i]!=0)$interRate2012[$i] = $interRate2012[$i] / $interRate2012cnt[$i];
+								if($interRate2013cnt[$i]!=0)$interRate2013[$i] = $interRate2013[$i] / $interRate2013cnt[$i];
+								if($interRate2014cnt[$i]!=0)$interRate2014[$i] = $interRate2014[$i] / $interRate2014cnt[$i];
+								if($interRate2015cnt[$i]!=0)$interRate2015[$i] = $interRate2015[$i] / $interRate2015cnt[$i];
+								if($interRate2016cnt[$i]!=0)$interRate2016[$i] = $interRate2016[$i] / $interRate2016cnt[$i];
+								if($interRate2017cnt[$i]!=0)$interRate2017[$i] = $interRate2017[$i] / $interRate2017cnt[$i];
+							}
+						?>
+						
+
+
+						<div id="lineChart1" style="width: 900px; height:400px;"></div>
+						<script type="text/javascript">
+            				// 基于准备好的dom，初始化echarts实例
+            				var myChart = echarts.init(document.getElementById('lineChart1'));
+            
+            				
+            				// 指定图表的配置项和数据
+            
+            				option = {
+								title: {
+									text: '债券期限-金额折线图',
+									subtext: '根据债券期限分类，每年债券金额的平均值'
+								},
+								tooltip: {
+									trigger: 'axis'
+								},
+								legend: {
+									data:['[0,1)','[1,3)','[3,5)','>=5']
+								},
+								grid: {
+									left: '3%',
+									right: '4%',
+									bottom: '3%',
+									containLabel: true
+								},
+								toolbox: {
+									feature: {
+										saveAsImage: {}
+									}
+								},
+								xAxis: {
+									name: '年份',
+									nameLocation: 'middle',
+									type: 'category',
+									boundaryGap: false,
+									data: ['2010','2011','2012','2013','2014','2015','2016','2017']
+								},
+								yAxis: {
+									name: '债券金额',
+									nameLocation: 'middle',
+									type: 'value'
+								},
+								series: [
+									{
+										name:'[0,1)',
+										type:'line',
+										stack: '总量1',
+										data:[<?=$total2010[0]?>, <?=$total2011[0]?>, <?=$total2012[0]?>, <?=$total2013[0]?>, <?=$total2014[0]?>, <?=$total2015[0]?>, <?=$total2016[0]?>, <?=$total2017[0]?>]
+									},
+									{
+										name:'[1,3)',
+										type:'line',
+										stack: '总量2',
+										data:[<?=$total2010[1]?>, <?=$total2011[1]?>, <?=$total2012[1]?>, <?=$total2013[1]?>, <?=$total2014[1]?>, <?=$total2015[1]?>, <?=$total2016[1]?>, <?=$total2017[1]?>]
+									},
+									{
+										name:'[3,5)',
+										type:'line',
+										stack: '总量3',
+										data:[<?=$total2010[2]?>, <?=$total2011[2]?>, <?=$total2012[2]?>, <?=$total2013[2]?>, <?=$total2014[2]?>, <?=$total2015[2]?>, <?=$total2016[2]?>, <?=$total2017[2]?>]
+									},
+									{
+										name:'>=5',
+										type:'line',
+										stack: '总量4',
+										data:[<?=$total2010[3]?>, <?=$total2011[3]?>, <?=$total2012[3]?>, <?=$total2013[3]?>, <?=$total2014[3]?>, <?=$total2015[3]?>, <?=$total2016[3]?>, <?=$total2017[3]?>]
+									}
+								]
+							};            
+            				myChart.setOption(option);
+
+            			</script>
+						<div id="lineChart2" style="width: 900px; height:400px;"></div>
+						<script type="text/javascript">
+            				// 基于准备好的dom，初始化echarts实例
+            				var myChart = echarts.init(document.getElementById('lineChart2'));
+            
+            				
+            				// 指定图表的配置项和数据
+            
+            				option = {
+								title: {
+									text: '债券期限-价格（票面利率）折线图',
+									subtext: '根据债券期限分类，每年债券利率的平均值'
+								},
+								tooltip: {
+									trigger: 'axis'
+								},
+								legend: {
+									data:['(0,1]','(1,3]','(3,5]','>5']
+								},
+								grid: {
+									left: '3%',
+									right: '4%',
+									bottom: '3%',
+									containLabel: true
+								},
+								toolbox: {
+									feature: {
+										saveAsImage: {}
+									}
+								},
+								xAxis: {
+									name: '年份',
+									nameLocation: 'middle',
+									type: 'category',
+									boundaryGap: false,
+									data: ['2010','2011','2012','2013','2014','2015','2016','2017']
+								},
+								yAxis: {
+									name: '票面利率',
+									nameLocation: 'middle',
+									type: 'value'
+								},
+								series: [
+									{
+										name:'(0,1]',
+										type:'line',
+										stack: '总量1',
+										data:[<?=$interRate2010[0]?>, <?=$interRate2011[0]?>, <?=$interRate2012[0]?>, <?=$interRate2013[0]?>, <?=$interRate2014[0]?>, <?=$interRate2015[0]?>, <?=$interRate2016[0]?>, <?=$interRate2017[0]?>]
+									},
+									{
+										name:'(1,3]',
+										type:'line',
+										stack: '总量2',
+										data:[<?=$interRate2010[1]?>, <?=$interRate2011[1]?>, <?=$interRate2012[1]?>, <?=$interRate2013[1]?>, <?=$interRate2014[1]?>, <?=$interRate2015[1]?>, <?=$interRate2016[1]?>, <?=$interRate2017[1]?>]
+									},
+									{
+										name:'(3,5]',
+										type:'line',
+										stack: '总量3',
+										data:[<?=$interRate2010[2]?>, <?=$interRate2011[2]?>, <?=$interRate2012[2]?>, <?=$interRate2013[2]?>, <?=$interRate2014[2]?>, <?=$interRate2015[2]?>, <?=$interRate2016[2]?>, <?=$interRate2017[2]?>]
+									},
+									{
+										name:'>5',
+										type:'line',
+										stack: '总量4',
+										data:[<?=$interRate2010[3]?>, <?=$interRate2011[3]?>, <?=$interRate2012[3]?>, <?=$interRate2013[3]?>, <?=$interRate2014[3]?>, <?=$interRate2015[3]?>, <?=$interRate2016[3]?>, <?=$interRate2017[3]?>]
+									}
+								]
+							};
+            				myChart.setOption(option);
+            			</script>
 
 						<h4>(3) 评级情况</h4>
 						<?php
