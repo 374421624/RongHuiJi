@@ -13,13 +13,15 @@
 	$url_financingInfo = $base_url."/api1/financing_info_0729?c_id=$id";
 	$url_changeinfo = $base_url."/api1/changeinfo?c_id=$id";
 	$url_business_info = $base_url."/api1/business?c_id=$id";
-
+	$url_financialstatement_info = $base_url."/api1/financialstatement?c_id=$id";
+	echo $url_financialstatement_info;
 	$baseinfo_data = json_decode(file_get_contents($url_baseinfo), true);
 	$holder_data = json_decode(file_get_contents($url_holders), true);
 	$manager_data = json_decode(file_get_contents($url_managers), true);
 	$financingInfo_data = json_decode(file_get_contents($url_financingInfo), true);
 	$changeinfo_data = json_decode(file_get_contents($url_changeinfo), true);
 	$business_info_data = json_decode(file_get_contents($url_business_info), true);
+	$financialstatement_info_data = json_decode(file_get_contents($url_financialstatement_info), true);
 
 	$gid = $financingInfo_data["g_id"];
 	$url_financingGroupInfo = $base_url."/api1/financing_group_info_0729?g_id=$gid";
@@ -101,11 +103,77 @@
               		<div class="anchor" id="introduction">
               			<h2>公司简介</h2>
                 		<p>公司名称：<?=$baseinfo_data["name"]?></p>
-                		<p>地址：<?=$baseinfo_data["reg_address"]?></p>
+						
+                		<p>注册地址：<?=$baseinfo_data["reg_address"]?></p>
                 		<button type="button" class="btn btn-default btn-block" data-toggle="collapse" data-target="#collapseIntroduction">详情</button>
                 		<div class="collapse" id="collapseIntroduction">
                             <div class="well">
-                                ...
+							<?php
+							//公司基本信息
+							$legal_name = $baseinfo_data['legal_name'];
+							$s_name = $baseinfo_data['s_name'];
+							$money = $baseinfo_data['money'];
+							$reg_address = $baseinfo_data['reg_address'];
+							?>
+							<p><b>法人：<?= $legal_name; ?></b>
+							<p><b>注册资金：<?= $money; ?></b>
+							<?php
+							if($s_name){ 
+							?>
+							<p><b>公司A股简称：<?$s_name; ?></b>
+							<?php
+							}
+							?> 
+							<p></p>
+							<span><b>公司主营业务：</b></span><b>
+							<?php
+							//判断是否存在主营业务
+							if($business_info_data['key_business_3_year'][0]['data']){
+								for($j = 0;$j<count($business_info_data['key_business_3_year'][0]['data']);$j++){
+									if($business_info_data['key_business_3_year'][0]['data'][$j][1]=="产品"){
+										?>
+										<span>
+										<?=$business_info_data['key_business_3_year'][0]['data'][$j][2];?>，	
+										</span>
+										<?php
+									}	
+								}
+							?>
+							等几个板块。</b>
+							<?php
+							}
+							else{
+								?>
+								<span><b>无。</b></span>
+								<?php
+							}
+							?>
+							<?php
+							//判断是否存在上市信息
+							if($baseinfo_data['list_info']){ 
+								?>
+								<p>——————————————————————————</p>
+								<p><b>上市信息</b></p>
+								<?php
+								for($i = 0;$i<count($baseinfo_data['list_info']);$i++){
+									$sname = $baseinfo_data['list_info'][$i]['s_name'];
+									$s_id = $sname = $baseinfo_data['list_info'][$i]['s_id'];
+									$address = $baseinfo_data['list_info'][$i]['address'];
+									$date = $baseinfo_data['list_info'][$i]['date'];
+									?>
+									<p><b>股票简称：<?= $sname; ?></b>
+
+									<p><b>股票代码：<?= $s_id; ?></b>
+
+									<p><b>上市地点：<?= $address; ?></b>
+
+									<p><b>上市时间：<?= $date; ?></b>
+									
+									
+									<?php
+								}   
+							}
+						?>
                             </div>
                         </div>
             		</div>
@@ -279,20 +347,20 @@
             				<?php 
             					for ($i = 0; $i < count($manager_data["managers"]); $i++) {
 									$name = $manager_data["managers"][$i]["name"];
-									echo "高管：",$name;
-									?>
+									?><span>高管：<?=$name?></span>
+
 									<br>
 									<?php
 									$post = $manager_data["managers"][$i]["post"];
-									echo "职位：",$post;?>
+									?><span>职位：<?=$post?></span>
 									<p>——————————————————————————————————</p>
 									<?php
 									$abstract = $manager_data["managers"][$i]["abstract"];
 									if($abstract == ''){
-										echo "简介：无。";
+										?><span>简介：无。</span><?php
 									}
 										else{
-										echo "简介：".$abstract;
+										?><span>简介：<?=$abstract?></span><?php
 									}
 									?>
 									<br><br>
@@ -325,7 +393,7 @@
 							$num = count($business_info_data['key_business_3_year'][0]['data']);
 							//按比例判断最大主营业务
 							$max_profit = $business_info_data['key_business_3_year'][0]['data'][0][4];
-							echo "公司主营业务分为";
+							?><span>公司主营业务分为</span><?php
 							//产品业务输出
 							for($j = 0;$j<count($business_info_data['key_business_3_year'][0]['data']);$j++){
 								if($business_info_data['key_business_3_year'][0]['data'][$j][1]=="产品"){
@@ -338,9 +406,8 @@
 									}
 								}	
 							}
-							echo "等几个板块，",$last_deadline,"年实现了营业额",$last_operate_rev,"元人民币，同比增长",$last_operate_rev_YOY,"，实现了利润总额",$last_profit,"元人民币。同比增长",$last_profit_YOY,"，主营业务中",$business_info_data['key_business_3_year'][0]['data'][$max][2],"占比较大的业务板块。占比",$business_info_data['key_business_3_year'][0]['data'][$max][4],"。";
-						?>
-
+							?>
+							<span> 等几个板块，<?=$last_deadline?>年实现了营业额<?=$last_operate_rev?>元人民币，同比增长<?=$last_operate_rev_YOY?>，实现了利润总额<?=$last_profit?>元人民币。同比增长<?=$last_profit_YOY?>，主营业务中<?=$business_info_data['key_business_3_year'][0]['data'][$max][2]?>占比较大的业务板块。占比<?=$business_info_data['key_business_3_year'][0]['data'][$max][4]?></span>
 						<h3 style = 'color:red;text-align:center'>根据地区划分前三年生产经营情况</h3>
 
 
@@ -615,10 +682,618 @@
             
             		<div class="anchor" id="finance">
             			<h2>财务情况</h2>
+						<?php
+								$date = $financialstatement_info_data['year'];
+								$sum_asset = $financialstatement_info_data['sum_asset'];
+								$sum_debt = $financialstatement_info_data['sum_debt'];
+								$sum_owners_equity = $financialstatement_info_data['sum_owners_equity'];
+								$asset_debt_ratio = $financialstatement_info_data['asset_debt_ratio'];
+								$net_profit = $financialstatement_info_data['net_profit'];
+								$net_profit_YOY = $financialstatement_info_data['net_profit_YOY'];
+								$operate_rev = $financialstatement_info_data['operate_rev'];
+								$operate_rev_YOY = $financialstatement_info_data['operate_rev_YOY'];
+						?>
+						<span>截止到<?=$date?>年末，公司总资产<?=$sum_asset?>元，总负债<?=$sum_debt?>元。所有者权益<?=$sum_owners_equity?>元。资产总负债率<?=$asset_debt_ratio?>。<?=$date?>年实现营业额收入<?=$operate_rev?>元，同比增长<?=$operate_rev_YOY?>。实现净利润<?=$net_profit?>元，同比增长<?=$net_profit_YOY?>。</span>
                 		<button type="button" class="btn btn-default btn-block" data-toggle="collapse" data-target="#collapseFinance">详情</button>
                 		<div class="collapse" id="collapseFinance">
                             <div class="well">
-                                ...
+                                <h3 style ="color:red;text-align:center">最近两年财务报表</h3>
+								<p style="text-align:right">（单位：万元）</p>
+								<table class = "table table-striped table-hover">
+									<tr>
+									<th>日期</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$date = $financialstatement_info_data['statement_2_year'][$i]['date'];
+										?>
+										<th><?=$date?></th>
+										<?php
+									}
+									?>
+									<th>最近一期</th>
+									<th>行业平均值</th>
+									</tr>
+
+									<tr>
+									<th>资产总额</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$sum_asset = $financialstatement_info_data['statement_2_year'][$i]['sum_asset'];
+										?>
+										<td><?=$sum_asset/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['sum_asset']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>流动资产</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$curr_asset = $financialstatement_info_data['statement_2_year'][$i]['curr_asset'];
+										?>
+										<td><?=$curr_asset/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['curr_asset']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>货币资金</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$monetary_fund = $financialstatement_info_data['statement_2_year'][$i]['monetary_fund'];
+										?>
+										<td><?=$monetary_fund/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['monetary_fund']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>应收账款</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$account_rec = $financialstatement_info_data['statement_2_year'][$i]['account_rec'];
+										?>
+										<td><?=$account_rec/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['account_rec']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>其他应收款</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$other_rec = $financialstatement_info_data['statement_2_year'][$i]['other_rec'];
+										?>
+										<td><?=$other_rec/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['other_rec']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>预付账款</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$advance_pay = $financialstatement_info_data['statement_2_year'][$i]['advance_pay'];
+										?>
+										<td><?=$advance_pay/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['advance_pay']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>存货</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$inventory = $financialstatement_info_data['statement_2_year'][$i]['inventory'];
+										?>
+										<td><?=$inventory/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['inventory']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>固定资产</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$fixed_ass = $financialstatement_info_data['statement_2_year'][$i]['fixed_ass'];
+										?>
+										<td><?=$fixed_ass/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['fixed_ass']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>负债总额</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$sum_liab = $financialstatement_info_data['statement_2_year'][$i]['sum_liab'];
+										?>
+										<td><?=$sum_liab/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['sum_liab']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>流动负债</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$sum_curr_liab = $financialstatement_info_data['statement_2_year'][$i]['sum_curr_liab'];
+										?>
+										<td><?=$sum_curr_liab/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['sum_curr_liab']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>短期借款</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$st_borrow = $financialstatement_info_data['statement_2_year'][$i]['st_borrow'];
+										?>
+										<td><?=$st_borrow/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['st_borrow']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>应付票据</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$bill_pay = $financialstatement_info_data['statement_2_year'][$i]['bill_pay'];
+										?>
+										<td><?=$bill_pay/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['bill_pay']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>应付账款</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$account_pay = $financialstatement_info_data['statement_2_year'][$i]['account_pay'];
+										?>
+										<td><?=$account_pay/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['account_pay']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>预收账款</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$advance_rec = $financialstatement_info_data['statement_2_year'][$i]['advance_rec'];
+										?>
+										<td><?=$advance_rec/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['advance_rec']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>其他应付款</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$other_pay = $financialstatement_info_data['statement_2_year'][$i]['other_pay'];
+										?>
+										<td><?=$other_pay/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['other_pay']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>长期借款</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$lt_borrow = $financialstatement_info_data['statement_2_year'][$i]['lt_borrow'];
+										?>
+										<td><?=$lt_borrow/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['lt_borrow']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>所有者权益</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$sum_she_equity = $financialstatement_info_data['statement_2_year'][$i]['sum_she_equity'];
+										?>
+										<td><?=$sum_she_equity/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['sum_she_equity']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>母公司所有者权益</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$sum_parent_equity = $financialstatement_info_data['statement_2_year'][$i]['sum_parent_equity'];
+										?>
+										<td><?=$sum_parent_equity/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['sum_parent_equity']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>营业收入</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$operate_rev = $financialstatement_info_data['statement_2_year'][$i]['operate_rev'];
+										?>
+										<td><?=$operate_rev/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['operate_rev']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>营业成本</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$operate_exp = $financialstatement_info_data['statement_2_year'][$i]['operate_exp'];
+										?>
+										<td><?=$operate_exp/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['operate_exp']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>税金及附加</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$operate_tax = $financialstatement_info_data['statement_2_year'][$i]['operate_tax'];
+										?>
+										<td><?=$operate_tax/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['operate_tax']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>营业利润</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$operate_profit = $financialstatement_info_data['statement_2_year'][$i]['operate_profit'];
+										?>
+										<td><?=$operate_profit/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['operate_profit']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>利润总额</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$sum_profit = $financialstatement_info_data['statement_2_year'][$i]['sum_profit'];
+										?>
+										<td><?=$sum_profit/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['sum_profit']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>净利润</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$net_profit = $financialstatement_info_data['statement_2_year'][$i]['net_profit'];
+										?>
+										<td><?=$net_profit/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['net_profit']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>归属母公司的净利润</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$parent_net_profit = $financialstatement_info_data['statement_2_year'][$i]['parent_net_profit'];
+										?>
+										<td><?=$parent_net_profit/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['parent_net_profit']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>经营性现金净流量</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$net_operate_cash_flow = $financialstatement_info_data['statement_2_year'][$i]['net_operate_cash_flow'];
+										?>
+										<td><?=$net_operate_cash_flow/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['net_operate_cash_flow']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>投资性现金净流量</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$net_inv_cash_flow = $financialstatement_info_data['statement_2_year'][$i]['net_inv_cash_flow'];
+										?>
+										<td><?=$net_inv_cash_flow/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['net_inv_cash_flow']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>筹资性现金净流量</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$net_fin_cash_flow = $financialstatement_info_data['statement_2_year'][$i]['net_fin_cash_flow'];
+										?>
+										<td><?=$net_fin_cash_flow/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['net_fin_cash_flow']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>现金净流量</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$net_cash_flow = $financialstatement_info_data['statement_2_year'][$i]['net_cash_flow'];
+										?>
+										<td><?=$net_cash_flow/10000?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['net_cash_flow']/10000;?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>资产负债率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$asset_debt_ratio = $financialstatement_info_data['statement_2_year'][$i]['asset_debt_ratio'];
+										?>
+										<td><?=$asset_debt_ratio?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['asset_debt_ratio'];?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>流动比率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$current_ratio = $financialstatement_info_data['statement_2_year'][$i]['current_ratio'];
+										?>
+										<td><?=$current_ratio?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['current_ratio'];?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>速动比率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$quick_ratio = $financialstatement_info_data['statement_2_year'][$i]['quick_ratio'];
+										?>
+										<td><?=$quick_ratio?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['quick_ratio'];?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>应收账款周转率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$account_rec_turnover = $financialstatement_info_data['statement_2_year'][$i]['account_rec_turnover'];
+										?>
+										<td><?=$account_rec_turnover?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['account_rec_turnover'];?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>存货周转率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$inventory_turnover = $financialstatement_info_data['statement_2_year'][$i]['inventory_turnover'];
+										?>
+										<td><?=$inventory_turnover?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['inventory_turnover'];?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>总资产周转率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$total_asset_turnover = $financialstatement_info_data['statement_2_year'][$i]['total_asset_turnover'];
+										?>
+										<td><?=$total_asset_turnover?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['total_asset_turnover'];?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>主营业务利润率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$main_business_profit_ratio = $financialstatement_info_data['statement_2_year'][$i]['main_business_profit_ratio'];
+										?>
+										<td><?=$main_business_profit_ratio?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['main_business_profit_ratio'];?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>净资产收益率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$net_asset_return_ratio = $financialstatement_info_data['statement_2_year'][$i]['net_asset_return_ratio'];
+										?>
+										<td><?=$net_asset_return_ratio?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['net_asset_return_ratio'];?></td>
+									<td>-</td>
+									</tr>
+
+									<tr>
+									<th>总资产报酬率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$total_asset_return_ratio = $financialstatement_info_data['statement_2_year'][$i]['total_asset_return_ratio'];
+										?>
+										<td><?=$total_asset_return_ratio?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['total_asset_return_ratio'];?></td>
+									<td>-</td>
+									</tr>
+
+									
+									<tr>
+									<th>营业增长率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$business_growth_rate = $financialstatement_info_data['statement_2_year'][$i]['business_growth_rate'];
+										?>
+										<td><?=$business_growth_rate?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['business_growth_rate'];?></td>
+									<td>-</td>
+									</tr>
+
+									
+									<tr>
+									<th>总资产增长率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$total_asset_growth_rate = $financialstatement_info_data['statement_2_year'][$i]['total_asset_growth_rate'];
+										?>
+										<td><?=$total_asset_growth_rate?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['total_asset_growth_rate'];?></td>
+									<td>-</td>
+									</tr>
+
+									
+									<tr>
+									<th>净利润增长率</th>
+									<?php
+									for($i = 0;$i<2;$i++){
+										$net_profit_growth_rate = $financialstatement_info_data['statement_2_year'][$i]['net_profit_growth_rate'];
+										?>
+										<td><?=$net_profit_growth_rate?></td>
+										<?php
+									}
+									?>
+									<td><?=$financialstatement_info_data['statement_last']['net_profit_growth_rate'];?></td>
+									<td>-</td>
+									</tr>
+
+									
+
+								</table>
                             </div>
                         </div>
             		</div>
