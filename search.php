@@ -13,6 +13,7 @@ $nextp = $p+1;
 $size = 10;
 $url = $search_url."/search?keyword=".urlencode($q)."&limit=$size&page=".($p);
 $data = json_decode(file_get_contents($url), true);
+echo $url;
 
 
 $total = $data["count"];
@@ -41,10 +42,11 @@ $total = $data["count"];
 			
 			<?PHP
             for ($i = 0; $i < count($data["result"]); $i++) {
-            	$id = $data["result"][$i][0];
-            	$name = $data["result"][$i][1];
-            	$shareholder = $data["result"][$i][2];
-            	$logo = $data["result"][$i][3];
+            	$id = $data["result"][$i]['id'];
+            	$name = $data["result"][$i]['name'];
+            	$shareholder = $data["result"][$i]['legal_name'];
+				$logo = $data["result"][$i]['logo'];
+				$address = $data['result'][$i]['address'];
             ?>
             
             <!-- 生成搜索结果 -->
@@ -58,7 +60,7 @@ $total = $data["count"];
             		<h4 class="media-heading"><a href="detail.php?id=<?=$id?>"><?=$name?></a></h4>
             		<p>
             			法人：<?=$shareholder?><br>
-            			公司简介：这是一个公司
+            			公司地址：<?=$address?>。
             		</p>
             		
             	</div>
