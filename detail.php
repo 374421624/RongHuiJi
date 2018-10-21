@@ -5,6 +5,7 @@
 	include("head.php");
 
 	$id = Request("id");
+	$urlshang = $_SERVER['HTTP_REFERER'];
 
 	# 读取接口数据
 	$url_baseinfo = $base_url."/api1/baseinfo?c_id=$id";
@@ -77,10 +78,17 @@
 
 <div class="container">
 	<div class="page-header" style="margin-top: 0px">
-		<h1>公司详情</h1>
+		<h1 id="top">公司详情</h1>
 	</div>
 	
 	<div class="row"> 
+		
+		<!-- 路径导航 -->
+		<ol class="breadcrumb">
+          <li><a href="index.php">Home</a></li>
+          <li><a href="<?=$urlshang?>">Search</a></li>
+          <li class="active">Detail</li>
+        </ol>
         
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
@@ -115,17 +123,17 @@
 							$money = $baseinfo_data['money'];
 							$reg_address = $baseinfo_data['reg_address'];
 							?>
-							<p><b>法人：<?= $legal_name; ?></b>
-							<p><b>注册资金：<?= $money; ?></b>
+							<p><strong>法人：<?= $legal_name; ?></strong></p>
+							<p><strong>注册资金：<?= $money; ?></strong></p>
 							<?php
 							if($s_name){ 
 							?>
-							<p><b>公司A股简称：<?$s_name; ?></b>
+							<p><strong>公司A股简称：<?$s_name; ?></strong></p>
 							<?php
 							}
 							?> 
 							<p></p>
-							<span><b>公司主营业务：</b></span><b>
+							<span><strong>公司主营业务：</strong></span><strong>
 							<?php
 							//判断是否存在主营业务
 							if($business_info_data['key_business_3_year'][0]['data']){
@@ -139,12 +147,12 @@
 									}	
 								}
 							?>
-							等几个板块。</b>
+							等几个板块。</strong>
 							<?php
 							}
 							else{
 								?>
-								<span><b>无。</b></span>
+								<span><strong>无。</strong></span>
 								<?php
 							}
 							?>
@@ -153,7 +161,7 @@
 							if($baseinfo_data['list_info']){ 
 								?>
 								<p>——————————————————————————</p>
-								<p><b>上市信息</b></p>
+								<p><strong>上市信息</strong></p>
 								<?php
 								for($i = 0;$i<count($baseinfo_data['list_info']);$i++){
 									$sname = $baseinfo_data['list_info'][$i]['s_name'];
@@ -161,13 +169,13 @@
 									$address = $baseinfo_data['list_info'][$i]['address'];
 									$date = $baseinfo_data['list_info'][$i]['date'];
 									?>
-									<p><b>股票简称：<?= $sname; ?></b>
+									<p><strong>股票简称：<?= $sname; ?></strong>
 
-									<p><b>股票代码：<?= $s_id; ?></b>
+									<p><strong>股票代码：<?= $s_id; ?></strong>
 
-									<p><b>上市地点：<?= $address; ?></b>
+									<p><strong>上市地点：<?= $address; ?></strong>
 
-									<p><b>上市时间：<?= $date; ?></b>
+									<p><strong>上市时间：<?= $date; ?></strong>
 									
 									
 									<?php
