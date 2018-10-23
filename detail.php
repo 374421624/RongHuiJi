@@ -17,7 +17,9 @@
 	$url_financialstatement_info = $base_url."/api1/financialstatement?c_id=$id";
 	$url_firmgraph_holders_info = $base_url."/api1/firmgraph_holders?c_id=$id";
 	$url_firmgraph_investments_info = $base_url."/api1/firmgraph_investments?c_id=$id";
+
 	echo $url_financialstatement_info;
+	
 	$baseinfo_data = json_decode(file_get_contents($url_baseinfo), true);
 	$holder_data = json_decode(file_get_contents($url_holders), true);
 	$manager_data = json_decode(file_get_contents($url_managers), true);
