@@ -27,7 +27,7 @@
 	$changeinfo_data = json_decode(file_get_contents($url_changeinfo), true);
 	$business_info_data = json_decode(file_get_contents($url_business_info), true);
 	$financialstatement_info_data = json_decode(file_get_contents($url_financialstatement_info), true);
-	$firmgraph_holders_info_data = json_decode(file_get_contents($url_firmgraph_holders_info), true);
+  $firmgraph_holders_info_data = json_decode(file_get_contents($url_firmgraph_holders_info), true);
 	$firmgraph_investments_info_data = json_decode(file_get_contents($url_firmgraph_investments_info), true);
 
 	$gid = $financingInfo_data["g_id"];
@@ -1690,6 +1690,165 @@
 							$rating_move = $financingInfo_data["rating"]["move"];
 						echo "经", $rating_organ ,"评定。该企业的",$rating_date,"主体信用等级为",$rating_rating,"。较上年主体信用评级", $rating_move,"。"
 						?>
+
+
+
+						<h4>(4) 有息负债情况</h4>
+							<p>根据公开数据显示，该企业有息总负债共<?= $financingInfo_data['debt']['total']/100000000 ?>亿元。该企业近三年及最近一期有息债务？增长规律？债务结构以长/短期为主，增减情况与现金流相匹配。</p>
+							<h5><b>近三年及最近一期有息负债表：</b></h5>
+							<p style = "text-align:right">（单位：亿元）</p>
+							<table class = "table table-striped table-hover">
+								<tr>
+								<th>年份</th>
+								<th style = 'text-align:center' colspan="2">短期借款</th>
+								<th style = 'text-align:center' colspan="2">应付票据</th>
+								<th style = 'text-align:center' colspan="2">一年内到期的非流动负债</th>
+								<th style = 'text-align:center' colspan="2">长期借款</th>
+								<th style = 'text-align:center' colspan="2">应付债券</th>
+								<th style = 'text-align:center' colspan="2">应付租赁款</th>
+								<th style = 'text-align:center' colspan="2">合计</th>
+								</tr>
+								<tr>
+									<td>--</td>
+									<td style = 'text-align:center'>金额</td>
+									<td style = 'text-align:center'>比例</td>
+									<td style = 'text-align:center'>金额</td>
+									<td style = 'text-align:center'>比例</td>
+									<td style = 'text-align:center'>金额</td>
+									<td style = 'text-align:center'>比例</td>
+									<td style = 'text-align:center'>金额</td>
+									<td style = 'text-align:center'>比例</td>
+									<td style = 'text-align:center'>金额</td>
+									<td style = 'text-align:center'>比例</td>
+									<td style = 'text-align:center'>金额</td>
+									<td style = 'text-align:center'>比例</td>
+									<td style = 'text-align:center'>金额</td>
+									<td style = 'text-align:center'>比例</td>
+								</tr>
+								<?php
+								//计算比例合计(未实现)
+								$sum_rate1 = 0;
+								$sum_rate2 = 0;
+								$sum_rate3 = 0;
+								$sum_rate4 = 0;
+								$sum_rate5 = 0;
+								$sum_rate6 = 0;
+								$sum_rate7 = 0; 
+								//最近三年
+								for($i=0;$i<count($financingInfo_data['debt']['3_years']);$i++){
+									//每一个年份
+									$data0 = $financingInfo_data['debt']['3_years'][$i][0];
+									$data1 = $financingInfo_data['debt']['3_years'][$i][1];
+									$data2 = $financingInfo_data['debt']['3_years'][$i][2];
+									$data3 = $financingInfo_data['debt']['3_years'][$i][3];
+									$data4 = $financingInfo_data['debt']['3_years'][$i][4];
+									$data5 = $financingInfo_data['debt']['3_years'][$i][5];
+									$data6 = $financingInfo_data['debt']['3_years'][$i][6];
+									$data7 = $financingInfo_data['debt']['3_years'][$i][7];
+									?>
+									<tr>
+										<td><?=$data0?></td>
+										<td><?=$data1/100000000?></td>
+										<td><?=$sum_rate1?></td>
+										<td><?=$data2/100000000?></td>
+										<td><?=$sum_rate2?></td>
+										<td><?=$data3/100000000?></td>
+										<td><?=$sum_rate3?></td>
+										<td><?=$data4/100000000?></td>
+										<td><?=$sum_rate4?></td>
+										<td><?=$data5/100000000?></td>
+										<td><?=$sum_rate5?></td>
+										<td><?=$data6/100000000?></td>
+										<td><?=$sum_rate6?></td>
+										<td><?=$data7/100000000?></td>
+										<td><?=$sum_rate7?></td>
+										
+									</tr>
+									<?php
+									
+									
+								}	
+								?>
+								<?php
+								$rate = 0;
+								//最近一期
+							
+								$data11 = $financingInfo_data['debt']['last'][1];
+								$data22 = $financingInfo_data['debt']['last'][2];
+								$data33 = $financingInfo_data['debt']['last'][3];
+								$data44 = $financingInfo_data['debt']['last'][4];
+								$data55 = $financingInfo_data['debt']['last'][5];
+								$data66 = $financingInfo_data['debt']['last'][6];
+								$data77 = $financingInfo_data['debt']['last'][7];
+								
+								?>
+								<tr>
+									<td>最近一期</td>
+									<td><?=$data11/100000000?></td>
+									<td><?=$rate?></td>
+									<td><?=$data22/100000000?></td>
+									<td><?=$rate?></td>
+									<td><?=$data33/100000000?></td>
+									<td><?=$rate?></td>
+									<td><?=$data44/100000000?></td>
+									<td><?=$rate?></td>
+									<td><?=$data55/100000000?></td>
+									<td><?=$rate?></td>
+									<td><?=$data66/100000000?></td>
+									<td><?=$rate?></td>
+									<td><?=$data77/100000000?></td>
+									<td><?=$rate?></td>
+										
+								</tr>
+							
+
+							</table>
+							<h5><b>近三年及最近一期该企业现金流反应的融资情况如下表：</b></h5>
+							<p style = "text-align:right">（单位：亿元）</p>
+							<table class = "table table-striped table-hover">
+            					<tr>
+            						<th>年份</th>
+            						<th>取得借款收到的现金</th>
+            						<th>发行债券收到的现金</th>
+            						<th>偿还债务支付的现金</th>
+									<th>分配股利、利润或偿还利息支付的现金</th>
+									<th>净额</th>
+            					</tr>
+								<?php
+								$s = count($financingInfo_data['debt']['3_years']);
+								//最近三年
+								for($i=0;$i<$s;$i++){
+									//每一个年份
+									$data0 = $financingInfo_data['debt']['3_years'][$i][0];
+									$data8 = $financingInfo_data['debt']['3_years'][$i][8];
+									$data9 = $financingInfo_data['debt']['3_years'][$i][9];
+									$data10 = $financingInfo_data['debt']['3_years'][$i][10];
+									$data11 = $financingInfo_data['debt']['3_years'][$i][11];
+									$data12 = $financingInfo_data['debt']['3_years'][$i][12];
+
+								?>
+								<tr>
+									<td><?=$data0?></td>
+									<td><?=$data8/100000000?></td>
+									<td><?=$data9/100000000?></td>
+									<td><?=$data10/100000000?></td>
+									<td><?=$data11/100000000?></td>
+									<td><?=$data12/100000000?></td>
+								</tr>
+								<?php
+									
+									
+								}	
+								?>
+								<tr>
+									<td>最近一期</td>
+									<td><?=$financingInfo_data['debt']['last'][8]/100000000?></td>
+									<td><?=$financingInfo_data['debt']['last'][9]/100000000?></td>
+									<td><?=$financingInfo_data['debt']['last'][10]/100000000?></td>
+									<td><?=$financingInfo_data['debt']['last'][11]/100000000?></td>
+									<td><?=$financingInfo_data['debt']['last'][12]/100000000?></td>
+								</tr>
+							</table>
 
                             </div>
                         </div>
