@@ -15,6 +15,8 @@
 	$url_changeinfo = $base_url."/api1/changeinfo?c_id=$id";
 	$url_business_info = $base_url."/api1/business?c_id=$id";
 	$url_financialstatement_info = $base_url."/api1/financialstatement?c_id=$id";
+	$url_firmgraph_holders_info = $base_url."/api1/firmgraph_holders?c_id=$id";
+	$url_firmgraph_investments_info = $base_url."/api1/firmgraph_investments?c_id=$id";
 	echo $url_financialstatement_info;
 	$baseinfo_data = json_decode(file_get_contents($url_baseinfo), true);
 	$holder_data = json_decode(file_get_contents($url_holders), true);
@@ -23,6 +25,8 @@
 	$changeinfo_data = json_decode(file_get_contents($url_changeinfo), true);
 	$business_info_data = json_decode(file_get_contents($url_business_info), true);
 	$financialstatement_info_data = json_decode(file_get_contents($url_financialstatement_info), true);
+	$firmgraph_holders_info_data = json_decode(file_get_contents($url_firmgraph_holders_info), true);
+	$firmgraph_investments_info_data = json_decode(file_get_contents($url_firmgraph_investments_info), true);
 
 	$gid = $financingInfo_data["g_id"];
 	$url_financingGroupInfo = $base_url."/api1/financing_group_info_0729?g_id=$gid";
