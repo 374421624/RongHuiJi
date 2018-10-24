@@ -27,7 +27,7 @@
 	$changeinfo_data = json_decode(file_get_contents($url_changeinfo), true);
 	$business_info_data = json_decode(file_get_contents($url_business_info), true);
 	$financialstatement_info_data = json_decode(file_get_contents($url_financialstatement_info), true);
-  $firmgraph_holders_info_data = json_decode(file_get_contents($url_firmgraph_holders_info), true);
+	$firmgraph_holders_info_data = json_decode(file_get_contents($url_firmgraph_holders_info), true);
 	$firmgraph_investments_info_data = json_decode(file_get_contents($url_firmgraph_investments_info), true);
 
 	$gid = $financingInfo_data["g_id"];
@@ -201,119 +201,211 @@
                 		<button type="button" class="btn btn-default btn-block" data-toggle="collapse" data-target="#collapseShareholder">详情</button>
                 		<div class="collapse" id="collapseShareholder">
                             <div class="well">
-							<div id="main" style="width: 900px; height:400px;"></div>
-            			<script type="text/javascript">
-            				// 基于准备好的dom，初始化echarts实例
-            				var myChart = echarts.init(document.getElementById('main'));
-            
-            				
-            				// 指定图表的配置项和数据
-            				var data = genData(50);
-            
-            				option = {
-            					title : {
-            						text: '所有股东投资占比',
-            						x:'center'
-            					},
-            					tooltip : {
-            						trigger: 'item',
-            						formatter: "{a} <br/>{b} : {d}%"
-            					},
-            					legend: {
-            						type: 'scroll',
-            						right: 10,
-            						top: 20,
-            						bottom: 20,
-            						data: data.legendData,
-            					},
-            					series : [
-            						{
-            							name: '股东',
-            							type: 'pie',
-            							radius : '55%',
-            							center: ['40%', '50%'],
-            							data: data.seriesData,
-            							itemStyle: {
-            								emphasis: {
-            									shadowBlur: 10,
-            									shadowOffsetX: 0,
-            									shadowColor: 'rgba(0, 0, 0, 0.5)'
-            								}
-            							}
-            						}
-            					]
-            				};
-            
-            
-            
-            
-            				function genData(count) {
-            					var holder_data_local = <?= json_encode($holder_data); ?>;
-            					var legendData = [];
-            					var seriesData = [];
-            					var total = 0;
-            					for (var i = 0; i < holder_data_local["holders"].length; i++) {
-            						name = holder_data_local["holders"][i]["name"];
-            						legendData.push(name);
-            						seriesData.push({
-            							name: name,
-            							value: valueConv(holder_data_local["holders"][i]["rate"])
-            						});
-            						total += valueConv(holder_data_local["holders"][i]["rate"]);
-            					}
-            					if(total != 1){
-            						seriesData.push({
-            							name: "其它",
-            							value: 1- total
-            						});
-            					}
-            
-            					return {
-            						legendData: legendData,
-            						seriesData: seriesData,
-            					};
-            
-            					function valueConv(valueOri) {
-            						var value = parseFloat(valueOri.replace("%", "")) / 100;
-            						return value;
-            					}
-            				}
-            
-            				// 使用刚指定的配置项和数据显示图表。
-            				myChart.setOption(option);
-            			</script>
+								<div id="main" style="width: 900px; height:400px;"></div>
+            					<script type="text/javascript">
+									// 基于准备好的dom，初始化echarts实例
+									var myChart = echarts.init(document.getElementById('main'));
+				
+								
+									// 指定图表的配置项和数据
+									var data = genData();
+				
+									option = {
+										title : {
+											text: '所有股东投资占比',
+											x:'center'
+										},
+										tooltip : {
+											trigger: 'item',
+											formatter: "{a} <br/>{b} : {d}%"
+										},
+										legend: {
+											type: 'scroll',
+											right: 10,
+											top: 20,
+											bottom: 20,
+											data: data.legendData,
+										},
+										series : [
+											{
+												name: '股东',
+												type: 'pie',
+												radius : '55%',
+												center: ['40%', '50%'],
+												data: data.seriesData,
+												itemStyle: {
+													emphasis: {
+														shadowBlur: 10,
+														shadowOffsetX: 0,
+														shadowColor: 'rgba(0, 0, 0, 0.5)'
+													}
+												}
+											}
+										]
+									};
+				
+				
+				
+				
+									function genData() {
+										var holder_data_local = <?= json_encode($holder_data); ?>;
+										var legendData = [];
+										var seriesData = [];
+										var total = 0;
+										for (var i = 0; i < holder_data_local["holders"].length; i++) {
+											name = holder_data_local["holders"][i]["name"];
+											legendData.push(name);
+											seriesData.push({
+												name: name,
+												value: valueConv(holder_data_local["holders"][i]["rate"])
+											});
+											total += valueConv(holder_data_local["holders"][i]["rate"]);
+										}
+										if(total != 1){
+											seriesData.push({
+												name: "其它",
+												value: 1- total
+											});
+										}
+					
+										return {
+											legendData: legendData,
+											seriesData: seriesData,
+										};
+					
+										function valueConv(valueOri) {
+											var value = parseFloat(valueOri.replace("%", "")) / 100;
+											return value;
+										}
+									}
+				
+									// 使用刚指定的配置项和数据显示图表。
+									myChart.setOption(option);
+            					</script>
             			
-            			<div id="table_1" class="table-responsive">
-            				<table class = "table table-striped table-hover">
-            					<tr>
-            						<th>序号</th>
-            						<th>股东名称</th>
-            						<th>企业类型</th>
-            						<th>股权占比</th>
-            					</tr>
-            					<?php 
-            					for ($i = 0; $i < count($holder_data["holders"]); $i++) {
-            					    $name = $holder_data["holders"][$i]["name"];
-            					    $rate = $holder_data["holders"][$i]["rate"];
-            					?>
-            					
-            					<tr>
-            						<td><?=$i+1?></td>
-            						<td><?=$name?></td>
-            						<td>-</td>
-            						<td><?=$rate?></td>
-            					</tr>
-            					
-            					<?php	
-            					}
-            				    ?>
-            				</table>
-            			</div>
-            			
-            		</div>
+            					<div id="table_1" class="table-responsive">
+            						<table class = "table table-striped table-hover">
+										<tr>
+											<th>序号</th>
+											<th>股东名称</th>
+											<th>企业类型</th>
+											<th>股权占比</th>
+										</tr>
+										<?php 
+										for ($i = 0; $i < count($holder_data["holders"]); $i++) {
+											$name = $holder_data["holders"][$i]["name"];
+											$rate = $holder_data["holders"][$i]["rate"];
+										?>
+										
+										<tr>
+											<td><?=$i+1?></td>
+											<td><?=$name?></td>
+											<td>-</td>
+											<td><?=$rate?></td>
+										</tr>
+										
+										<?php	
+										}
+										?>
+            						</table>
+            					</div>
 
-                            </div>
+
+
+								<div id="treeDiag" style="width: 900px; height:700px;"></div>
+            					<script type="text/javascript">
+									// 基于准备好的dom，初始化echarts实例
+									var myChart = echarts.init(document.getElementById('treeDiag'));
+				
+								
+									// 指定图表的配置项和数据
+									
+									var data1 = getData();
+
+									function getData() {
+										var seriesdata = {};
+										var firmgraph_holders = <?= file_get_contents($url_firmgraph_holders_info); ?>;
+										var firmgraph_investments = <?= file_get_contents($url_firmgraph_investments_info); ?>;
+										seriesdata.name = "<?=$baseinfo_data["name"]?>";
+										seriesdata.children = [];
+										seriesdata.children.push({
+											name: "股东",
+											children: []
+										});
+										seriesdata.children.push({
+											name: "投资",
+											children: []
+										});
+										for (var i = 0; i < firmgraph_holders.holders.length; i++) {
+											seriesdata.children[0].children.push({
+												name: firmgraph_holders.holders[i].name,
+												rate: firmgraph_holders.holders[i].rate
+											});
+										}
+										for (var i = 0; i < firmgraph_investments.investments.length; i++) {
+											seriesdata.children[1].children.push({
+												name: firmgraph_investments.investments[i].name,
+												rate: firmgraph_investments.investments[i].rate
+											});
+										}
+										return seriesdata;
+									}
+				
+									option = {
+										title: {
+											text: '该企业的股东及投资企业'
+										},
+										tooltip: {
+											trigger: 'item',
+											triggerOn: 'mousemove'
+										},
+										series:[
+											{
+												type: 'tree',
+
+												name: 'tree1',
+
+												data: [data1],
+
+												top: '0%',
+												left: '20%',
+												bottom: '0%',
+												right: '50%',
+
+												symbolSize: 7,
+
+												label: {
+													normal: {
+														position: 'left',
+														verticalAlign: 'middle',
+														align: 'right'
+													}
+												},
+
+												leaves: {
+													label: {
+														normal: {
+															position: 'right',
+															verticalAlign: 'middle',
+															align: 'left'
+														}
+													}
+												},
+
+												expandAndCollapse: true,
+
+												animationDuration: 550,
+												animationDurationUpdate: 750
+
+											}
+										]
+									};
+									// 使用刚指定的配置项和数据显示图表。
+									myChart.setOption(option);
+            					</script>
+            				</div>	<!--well-->
                         </div>
+                    </div>
             
             
             		<div class="anchor" id="history">
@@ -430,7 +522,7 @@
 								// 基于准备好的dom，初始化echarts实例
 								var myChart = echarts.init(document.getElementById('main2'));
 								// 指定图表的配置项和数据
-								var data = genData(50);
+								var data = genData();
 
 								option = {
 									title : {
@@ -467,7 +559,7 @@
 									]
 								};
 
-								function genData(count) {
+								function genData() {
 									var business_data_local = <?= json_encode($business_info_data); ?>;
 									var legendData = [];
 									var seriesData = [];
@@ -563,7 +655,7 @@
 								// 基于准备好的dom，初始化echarts实例
 								var myChart = echarts.init(document.getElementById('main3'));
 								// 指定图表的配置项和数据
-								var data = genData(50);
+								var data = genData();
 
 								option = {
 									title : {
@@ -600,7 +692,7 @@
 									]
 								};
 
-								function genData(count) {
+								function genData() {
 									var business_data_local = <?= json_encode($business_info_data); ?>;
 									var legendData = [];
 									var seriesData = [];
