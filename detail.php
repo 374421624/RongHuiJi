@@ -1471,8 +1471,87 @@
 							echo "。";
 						?>
 							<h4>(1) 集团获得主要贷款银行的授信情况</h4>
-						<p>！！！内容待填充！！！</p>
+							<p>截至---待填充---,集团主要合作银行的授信总额<?=$totalCredit?>亿元，未使用的授信额度<?=$unusedCredit?>亿元。合作的主要银行情况如下表：</p>
+							<p style = 'text-align:right'>（单位：亿元）</p>
+							<table class = "table table-striped table-hover">
+									<tr>
+										<th>银行名称</th>
+										<th>授信额度</th>
+										<th>已使用额度</th>
+										<th>未使用额度</th>
+										<th>授信到期日</th>
+									</tr>
+									<?php
+									$used_sum = 0;
+									for ($k = 0;$k<count($financingGroupInfo_data['credit_detail']);$k++){
+										$bank = $financingGroupInfo_data['credit_detail'][$k]['bank'];
+										$amount = $financingGroupInfo_data['credit_detail'][$k]['amount']/10000;
+										$used = $financingGroupInfo_data['credit_detail'][$k]['used']/10000;
+										$unused = $financingGroupInfo_data['credit_detail'][$k]['unused']/10000;
+										$limit_date = $financingGroupInfo_data['credit_detail'][$k]['limit_date'];
+										$used_sum += $used;
+										?>
+										<tr>
+											<td><?=$bank?></td>
+											<td><?=$amount?></td>
+											<td><?=$used?></td>
+											<td><?=$unused?></td>
+											<td><?=$limit_date?></td>		
+										</tr>
+									<?php 
+									}
+									?>
+									<tr>
+											<td>合计</td>
+											<td><?=$totalCredit?></td>
+											<td><?=$used_sum?></td>
+											<td><?=$unusedCredit?></td>		
+										</tr>
+							</table>
 						<div id="table_2" class="table-responsive">
+							<?php
+							$mid = 0;
+							$mid_sum = 0;
+							$short = 0;
+							$short_sum = 0;
+							$mid_qiye = 0;
+							$mid_qiye_sum = 0;
+							$ABN = 0;
+							$ABN_sum = 0;
+							$company_debt = 0;
+							$company_debt_sum = 0;
+							$zhengquan = 0;
+							$zhengquan_sum = 0;
+							for ($j = 0; $j < count($financingGroupInfo_data["bond_detail"]); $j++) {
+								if($financingGroupInfo_data["bond_detail"][$j]['classify'] == '一般中期票据'){
+									$mid++;
+									$mid_sum += $financingGroupInfo_data["bond_detail"][$j]['total'];
+								}
+								if($financingGroupInfo_data["bond_detail"][$j]['classify'] == '一般企业债'){
+									$mid_qiye++;
+									$mid_qiye_sum += $financingGroupInfo_data["bond_detail"][$j]['total'];
+								}
+								if($financingGroupInfo_data["bond_detail"][$j]['classify'] == '一般公司债'){
+									$company_debt++;
+									$company_debt_sum += $financingGroupInfo_data["bond_detail"][$j]['total'];
+								}
+								if($financingGroupInfo_data["bond_detail"][$j]['classify'] == '交易商协会ABN'){
+									$ABN++;
+									$ABN_sum += $financingGroupInfo_data["bond_detail"][$j]['total'];
+								}
+								if($financingGroupInfo_data["bond_detail"][$j]['classify'] == '一般短期融资券'){
+									$short++;
+									$short_sum += $financingGroupInfo_data["bond_detail"][$j]['total'];
+								}
+								if($financingGroupInfo_data["bond_detail"][$j]['classify'] == '证券公司债'){
+									$zhengquan++;
+									$zhengquan_sum += $financingGroupInfo_data["bond_detail"][$j]['total'];
+								}
+							}
+							?>
+							<h4>(2) 债券及其资产支持证券融资情况</h4>
+							<p>截至--待填充---，集团及其子公司以发行商出入存续期内的债券（含资产支持证券）金额<?=$financingInfo_data['bond_total']['total']?>亿元，平均期限<?=$financingInfo_data['bond_total']['avg_deadline']?>年，平均价格<?=$financingInfo_data['bond_total']['avg_inter_rate']?>%。集团及其子公司处在存续期内的一般中期票据<?=$mid?>只，金额共<?=$mid_sum?>亿元，一般企业债<?=$mid_qiye?>只，金额共<?=$mid_qiye_sum?>亿元，一般公司债<?=$company_debt?>只，金额共<?=$company_debt_sum?>亿元，一般短期融资券<?=$short?>只，金额共<?=$short_sum?>亿元，交易商协会ABN<?=$ABN?>只，金额共<?=$ABN_sum?>亿元，证券公司债<?=$zhengquan?>只，金额共<?=$zhengquan_sum?>亿元，具体情况如下表：</p>
+							<p style = 'text-align:right'>（单位：亿元）</p>
             				<table class = "table table-striped table-hover">
             					<tr>
             						<th>债务人</th>
@@ -1940,6 +2019,90 @@
 									<td><?=$financingInfo_data['debt']['last'][11]/100000000?></td>
 									<td><?=$financingInfo_data['debt']['last'][12]/100000000?></td>
 								</tr>
+							</table>
+							<h4>(5) 股权融资情况</h4>
+							<p>该集团旗下共有<?=$financingGroupInfo_data['share_financing_total']['listed_num']?>家上市公司，分别为
+							<?php
+							for($m = 0;$m<count($financingGroupInfo_data['share_financing_total']['listed']);$m++){
+								$company_name = $financingGroupInfo_data['share_financing_total']['listed'][$m];
+								?>
+								<span><?=$company_name?></span>
+								<?php
+							}
+							?>,根据公开信息显示，集团旗下上市公司合计通过股票市场融资<?=$financingGroupInfo_data['share_financing_total']['total']?>亿元，其中
+							<?php
+							for($n = 0;$n<count($financingGroupInfo_data['share_financing_total']['detail']);$n++){
+								$kind = $financingGroupInfo_data['share_financing_total']['detail'][$n][0];
+								$kind_money = $financingGroupInfo_data['share_financing_total']['detail'][$n][1];
+								?><?=$kind?>类型股票募集<?=$kind_money?>亿元,
+								<?php
+							}
+							?>股票募集资金情况如下表：</p>
+							<table class = "table table-striped table-hover">
+									<tr>
+										<th>上市公司</th>
+										<th>上市日期</th>
+										<th>发行类型</th>
+										<th>上市交易所</th>
+										<th>发行股票数量（万股）</th>
+										<th>发行价格（元）</th>
+										<th>募集金额（亿元）</th>
+										<th>主承销商</th>
+									</tr>
+									<?php
+									for($j = 0;$j<count($financingGroupInfo_data['share_financing_detail']);$j++){
+										if($financingGroupInfo_data['share_financing_detail'][$j]['detail']){
+											for($i = 0;$i<count($financingGroupInfo_data['share_financing_detail'][$j]['detail']);$i++){
+												$out_kind = $financingGroupInfo_data['share_financing_detail'][$j]['detail'][$i][0];
+												$out_date = $financingGroupInfo_data['share_financing_detail'][$j]['detail'][$i][1];
+												$out_num = $financingGroupInfo_data['share_financing_detail'][$j]['detail'][$i][2];
+												$out_price = $financingGroupInfo_data['share_financing_detail'][$j]['detail'][$i][3];
+												$receive_money = $financingGroupInfo_data['share_financing_detail'][$j]['detail'][$i][4];
+											
+											?>
+											<tr>
+												<td><?=$financingGroupInfo_data['share_financing_detail'][$j]['s_name'];?></td>
+												<td><?=$financingGroupInfo_data['share_financing_detail'][$j]['list_date'];?></td>
+												<td><?=$out_kind?></td>
+												<td><?=$financingGroupInfo_data['share_financing_detail'][$j]['address']?></td>
+												<td><?=$out_num?></td>
+												<td><?=$out_price?></td>
+												<td><?=$receive_money?></td>
+												<td><?=$financingGroupInfo_data['share_financing_detail'][$j]['lead_underwriter'];?></td>
+											</tr>
+										<?php
+										}
+									}
+								}
+									?>
+							</table>
+							
+							<h4>(6) 资产管理计划情况</h4>
+							<p>根据公开数据显示，结合大数据分析，该企业与xx家资产管理公司合作发行xx笔资产管理计划募集资金，因资产管理计划的非公开性，根据资产管理公司披露的信息总结，该企业融资情况如下表：</p>
+							<table class = "table table-striped table-hover">
+									<tr>
+										<th>公司</th>
+										<th>资产管理公司</th>
+										<th>产品名称</th>
+										<th>资管计划成立时间</th>
+										<th>续存规模</th>
+										<th>资管计划期限</th>
+										<th>资金运作方式</th>
+										<th>资管计划受托人</th>
+										<th>经理</th>
+									</tr>
+									<tr>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+										<td>-</td>
+									</tr>
+
 							</table>
 
                             </div>
